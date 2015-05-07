@@ -1,0 +1,38 @@
+﻿<div id="chart" style="width: 870px;height:500px;">
+    <svg style="height:500px;width:870px;" class="nv-chart-93825"> </svg>
+</div>
+<script src="vendor/d3.js"></script>
+<script src="vendor/nv.d3.js"></script>
+<link href="vendor/nv.d3.css" rel="stylesheet" />
+<script src="../src/customLineChart.js"></script>
+<script src="../src/customRange.js"></script>
+<script type="text/javascript">
+
+    d3.json('vendor/info.json', function (data) {
+        nv.addGraph(function () {
+            var chart = nv.models.customLineChart()
+                    .x(function(d) { return Date.parse(d[0])})
+                    .y(function(d) { return d[1] })
+                    .setControlsData([
+                        { key: '2D', days:2},
+                        { key: '5D', days:5 },
+                        { key: '10D', days:10},
+                        { key: '15D', days:15},
+                        { key: '1M', days:30},
+                        { key: '3M', days:90}
+                    ])
+                    ;
+            chart.xAxis.tickFormat(function(d) {
+                return d3.time.format('%d/%m/%Y')(new Date(d))});
+            chart.yAxis
+                    .tickFormat(d3.format(',.1%'));
+
+            d3.select('#chart svg')
+                .datum(data)
+                .call(chart);
+
+            nv.utils.windowResize(chart.update);
+            return chart;
+        });
+    });
+</script>
